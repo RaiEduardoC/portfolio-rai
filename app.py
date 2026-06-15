@@ -216,22 +216,22 @@ CURSOS = [
 
 COMPETENCIAS = {
     "Linguagens & Bancos de Dados": [
-        ("SQL (Oracle, SQL Server, MySQL)", 95),
+        ("SQL (Oracle, SQL Server, MySQL)", 100),
         ("Python (Pandas, Streamlit, APIs)", 85),
-        ("VBA", 90),
-        ("DAX", 88),
+        ("VBA", 100),
+        ("DAX", 100),
     ],
     "Business Intelligence": [
-        ("Power BI", 95),
-        ("Excel Avançado", 95),
-        ("Modelagem de Dados", 90),
-        ("Storytelling com Dados", 85),
+        ("Power BI", 100),
+        ("Excel Avançado", 100),
+        ("Modelagem de Dados", 100),
+        ("Storytelling com Dados", 100),
     ],
     "Engenharia de Dados & Automação": [
-        ("ETL / Pipelines", 88),
-        ("Power Automate", 85),
-        ("Git & GitHub", 80),
-        ("Integração via APIs", 82),
+        ("ETL / Pipelines", 100),
+        ("Power Automate", 100),
+        ("Git & GitHub", 100),
+        ("Integração via APIs", 100),
     ],
     "Inteligência Artificial": [
         ("Engenharia de Prompts", 85),
