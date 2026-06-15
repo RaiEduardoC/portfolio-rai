@@ -1,13 +1,25 @@
 import streamlit as st
 from pathlib import Path
 import base64
+from PIL import Image
+
+# ============================================================
+# HELPERS DE ASSETS (devem vir antes de set_page_config)
+# ============================================================
+def get_page_icon():
+    for name in ("assets/foto_perfil.jpg", "assets/foto_perfil.jpeg",
+                 "assets/foto_perfil.png"):
+        path = Path(__file__).parent / name
+        if path.exists():
+            return Image.open(path)
+    return "📊"
 
 # ============================================================
 # CONFIGURAÇÃO DA PÁGINA
 # ============================================================
 st.set_page_config(
     page_title="Raí Eduardo Cardoso | Analista de Dados",
-    page_icon="📊",
+    page_icon=get_page_icon(),
     layout="wide",
     initial_sidebar_state="expanded"
 )
