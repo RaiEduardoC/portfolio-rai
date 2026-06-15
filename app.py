@@ -1,5 +1,6 @@
 import streamlit as st
 from pathlib import Path
+import base64
 
 # ============================================================
 # CONFIGURAÇÃO DA PÁGINA
@@ -20,7 +21,19 @@ def load_css(file_name: str) -> None:
         with open(css_path, "r", encoding="utf-8") as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
 
+def get_photo_b64() -> str:
+    for name in ("assets/foto_perfil.jpg", "assets/foto_perfil.jpeg",
+                 "assets/foto_perfil.png", "foto_perfil.jpg",
+                 "foto_perfil.jpeg", "foto_perfil.png"):
+        path = Path(__file__).parent / name
+        if path.exists():
+            with open(path, "rb") as f:
+                ext = path.suffix.lstrip(".").replace("jpg", "jpeg")
+                return f"data:image/{ext};base64,{base64.b64encode(f.read()).decode()}"
+    return ""
+
 load_css("style.css")
+FOTO_B64 = get_photo_b64()
 
 # ============================================================
 # DADOS DO PERFIL (centralizados para fácil manutenção)
@@ -282,10 +295,14 @@ PROJETOS = [
 # COMPONENTES VISUAIS
 # ============================================================
 def render_header():
-    """Cabeçalho principal com nome e cargo."""
+    avatar = (
+        f'<img src="{FOTO_B64}" class="header-avatar photo" alt="Raí Eduardo Cardoso"/>'
+        if FOTO_B64 else
+        '<div class="header-avatar">RC</div>'
+    )
     st.markdown(f"""
         <div class="header-container">
-            <div class="header-avatar">RC</div>
+            {avatar}
             <div class="header-text">
                 <h1 class="header-name">{PERFIL['nome']}</h1>
                 <p class="header-role">{PERFIL['cargo']}</p>
@@ -447,9 +464,14 @@ def render_contato():
 # SIDEBAR DE NAVEGAÇÃO
 # ============================================================
 with st.sidebar:
-    st.markdown("""
+    sidebar_avatar = (
+        f'<img src="{FOTO_B64}" class="sidebar-avatar photo" alt="Raí Eduardo Cardoso"/>'
+        if FOTO_B64 else
+        '<div class="sidebar-avatar">RC</div>'
+    )
+    st.markdown(f"""
         <div class="sidebar-profile">
-            <div class="sidebar-avatar">RC</div>
+            {sidebar_avatar}
             <h3>Raí E. Cardoso</h3>
             <p>Analista de Dados</p>
         </div>

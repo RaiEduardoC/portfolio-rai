@@ -59,6 +59,14 @@ section[data-testid="stSidebar"] {
     box-shadow: 0 0 20px var(--accent-glow);
 }
 
+.sidebar-avatar.photo {
+    background: none;
+    object-fit: cover;
+    object-position: center top;
+    border: 2px solid var(--accent);
+    display: block;
+}
+
 .sidebar-profile h3 {
     color: var(--text-primary) !important;
     margin: 0;
@@ -127,6 +135,13 @@ section[data-testid="stSidebar"] .stRadio label:hover {
     font-weight: bold;
     box-shadow: 0 0 40px var(--accent-glow);
     flex-shrink: 0;
+}
+
+.header-avatar.photo {
+    background: none;
+    object-fit: cover;
+    object-position: center top;
+    border: 3px solid var(--accent);
 }
 
 .header-text {
