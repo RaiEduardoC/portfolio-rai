@@ -143,6 +143,17 @@ button[kind="headerNoPadding"][data-testid="stBaseButton-headerNoPadding"] {
     visibility: visible !important;
 }
 
+/* Versões novas do Streamlit usam um glifo de fonte (Material Symbols),
+   não um <svg>. Ele é colorido por `color`, então forçamos também o texto. */
+[data-testid="stSidebarCollapsedControl"] [data-testid="stIconMaterial"],
+[data-testid="stSidebarCollapsedControl"] span,
+[data-testid="collapsedControl"] [data-testid="stIconMaterial"],
+[data-testid="collapsedControl"] span {
+    color: var(--accent) !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
 [data-testid="stSidebarCollapsedControl"] button:hover,
 [data-testid="collapsedControl"] button:hover {
     background: var(--accent) !important;
@@ -152,7 +163,9 @@ button[kind="headerNoPadding"][data-testid="stBaseButton-headerNoPadding"] {
 }
 
 [data-testid="stSidebarCollapsedControl"] button:hover svg,
-[data-testid="collapsedControl"] button:hover svg {
+[data-testid="collapsedControl"] button:hover svg,
+[data-testid="stSidebarCollapsedControl"] button:hover span,
+[data-testid="collapsedControl"] button:hover span {
     fill: #FFFFFF !important;
     color: #FFFFFF !important;
     stroke: #FFFFFF !important;

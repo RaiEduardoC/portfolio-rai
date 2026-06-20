@@ -1,2 +1,5 @@
-streamlit>=1.39.0
+# Versao FIXADA: o Streamlit Cloud instalava sempre a ultima versao, cuja
+# estrutura HTML do botao de expandir a sidebar e diferente da testada
+# localmente (1.43.0). Fixar garante que a nuvem se comporte igual ao local.
+streamlit==1.43.0
 Pillow>=10.0.0
