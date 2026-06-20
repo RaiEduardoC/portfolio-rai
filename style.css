@@ -67,43 +67,38 @@ html, body, [class*="css"] {
 /* Largura de conteúdo confortável */
 .block-container {
     max-width: 1180px;
-    padding-top: 3rem !important;
+    padding-top: 2.6rem !important;   /* respiro p/ o botão de menu não colidir */
     padding-bottom: 3rem !important;
 }
 
-/* Esconder elementos padrão do Streamlit */
-#MainMenu {visibility: hidden;}
-.stDeployButton, [data-testid="stToolbar"] {display: none !important;}
-footer {visibility: hidden;}
-
-/* Header transparente — NÃO zerar a altura, senão o botão de
-   reabrir a sidebar (que vive no header) é recortado e some.
-   Em vez disso, deixamos o header "atravessável" pelo mouse e
-   reativamos o clique apenas no botão de expandir. */
-header[data-testid="stHeader"] {
-    background: transparent !important;
-    height: auto !important;
-    pointer-events: none !important;
-    overflow: visible !important;
+/* Esconder elementos padrão do Streamlit
+   (MESMA estratégia do LOGFLOW: NÃO zerar a altura do header) */
+#MainMenu { visibility: hidden; }
+footer { visibility: hidden; }
+.stDeployButton,
+[data-testid="stToolbar"],
+[data-testid="stDecoration"],
+[data-testid="stStatusWidget"] {
+    display: none !important;
 }
 
-/* Reativa o clique em TODOS os controles dentro do header.
-   Usamos o curinga (*) em vez de listar data-testids específicos,
-   porque o nome do botão de expandir a sidebar muda entre versões
-   do Streamlit (stSidebarCollapsedControl, collapsedControl,
-   stExpandSidebarButton...). Reativar todos garante que o botão
-   de reabrir sempre receba o clique. */
+/* Header transparente, porém SEM esconder/zerar — assim o botão de
+   reabrir a sidebar (que vive no header) continua acessível.
+   Tornamos o header "atravessável" pelo mouse e reativamos o clique
+   apenas nos controles internos (o botão de expandir). */
+header[data-testid="stHeader"] {
+    background: transparent !important;
+    pointer-events: none !important;
+}
+
 header[data-testid="stHeader"] * {
     pointer-events: auto !important;
 }
 
 /* Botão de expandir a sidebar quando ela está recolhida:
-   garantir que continue visível, clicável e acima do conteúdo.
-   Cobrimos todos os nomes de data-testid conhecidos. */
+   garantir que continue visível, clicável e acima do conteúdo */
 [data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"],
-[data-testid="stExpandSidebarButton"],
-[data-testid="stSidebarCollapseButton"] {
+[data-testid="collapsedControl"] {
     visibility: visible !important;
     display: flex !important;
     opacity: 1 !important;
@@ -115,23 +110,18 @@ header[data-testid="stHeader"] * {
 }
 
 [data-testid="stSidebarCollapsedControl"] button,
-[data-testid="collapsedControl"] button,
-[data-testid="stExpandSidebarButton"] button,
-[data-testid="stSidebarCollapseButton"] button {
+[data-testid="collapsedControl"] button {
     color: var(--text-primary) !important;
     background: var(--bg-card) !important;
     border: 1px solid var(--border) !important;
     border-radius: var(--radius-sm) !important;
     box-shadow: var(--shadow-md) !important;
     pointer-events: auto !important;
-    cursor: pointer !important;
     transition: var(--transition);
 }
 
 [data-testid="stSidebarCollapsedControl"] button:hover,
-[data-testid="collapsedControl"] button:hover,
-[data-testid="stExpandSidebarButton"] button:hover,
-[data-testid="stSidebarCollapseButton"] button:hover {
+[data-testid="collapsedControl"] button:hover {
     border-color: var(--accent) !important;
     color: var(--accent) !important;
 }
@@ -998,7 +988,7 @@ section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:has(input:
         flex-direction: column;
         align-items: flex-start;
     }
-    .block-container { padding-top: 1.5rem !important; }
+    .block-container { padding-top: 2.6rem !important; }
 }
 
 /* ------------------------------------------------------------
