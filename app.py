@@ -74,7 +74,7 @@ PYTHON_ICON = get_icon_b64("python.png")
 # Ícones do menu lateral: o st.radio não aceita HTML nas opções, então
 # injetamos a imagem (Base64) via CSS ::before em cada item, na ordem do menu.
 _MENU_ICONS = [HOME_ICON, SUITCASE_ICON, GRADUATION_ICON,
-               COMPETENCIA_ICON, STARTUP_ICON, GMAIL_ICON]
+               COMPETENCIA_ICON, STARTUP_ICON, PHONE_ICON]
 _menu_css = "".join(
     f'section[data-testid="stSidebar"] .stRadio [role="radiogroup"] '
     f'> label:nth-of-type({i + 1})::before {{ background-image: url("{icon}"); }}'
