@@ -71,6 +71,17 @@ PHONE_ICON = get_icon_b64("telephone.png")
 WHATSAPP_ICON = get_icon_b64("whatsapp.png")
 PYTHON_ICON = get_icon_b64("python.png")
 
+# Ícones do menu lateral: o st.radio não aceita HTML nas opções, então
+# injetamos a imagem (Base64) via CSS ::before em cada item, na ordem do menu.
+_MENU_ICONS = [HOME_ICON, SUITCASE_ICON, GRADUATION_ICON,
+               COMPETENCIA_ICON, STARTUP_ICON, GMAIL_ICON]
+_menu_css = "".join(
+    f'section[data-testid="stSidebar"] .stRadio [role="radiogroup"] '
+    f'> label:nth-of-type({i + 1})::before {{ background-image: url("{icon}"); }}'
+    for i, icon in enumerate(_MENU_ICONS) if icon
+)
+st.markdown(f"<style>{_menu_css}</style>", unsafe_allow_html=True)
+
 # ============================================================
 # DADOS DO PERFIL (centralizados para fácil manutenção)
 # ============================================================
@@ -537,8 +548,12 @@ with st.sidebar:
     st.markdown("---")
     st.markdown(f"""
         <div class="sidebar-links">
-            <a href="{PERFIL['linkedin']}" target="_blank">LinkedIn</a>
-            <a href="{PERFIL['github']}" target="_blank">GitHub</a>
+            <a href="{PERFIL['linkedin']}" target="_blank">
+                <img src="{LINKEDIN_ICON}" class="icon"/>LinkedIn
+            </a>
+            <a href="{PERFIL['github']}" target="_blank">
+                <img src="{GITHUB_ICON}" class="icon"/>GitHub
+            </a>
         </div>
     """, unsafe_allow_html=True)
 
@@ -564,8 +579,9 @@ elif pagina == "Contato":
 # ============================================================
 # RODAPÉ
 # ============================================================
-st.markdown("""
+st.markdown(f"""
     <div class="footer">
-        <p>© 2026 Raí Eduardo Cardoso — Desenvolvido com Python & Streamlit 🐍</p>
+        <p>© 2026 Raí Eduardo Cardoso — Desenvolvido com Python &amp; Streamlit
+        <img src="{PYTHON_ICON}" class="icon icon-footer"/></p>
     </div>
 """, unsafe_allow_html=True)

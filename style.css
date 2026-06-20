@@ -300,6 +300,26 @@ section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:hover {
     transform: translateX(4px);
 }
 
+/* Ícone de cada item do menu (background-image definido dinamicamente no app.py) */
+section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label::before {
+    content: "";
+    display: inline-block;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.8;
+    transition: var(--transition);
+}
+
+section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:hover::before,
+section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:has(input:checked)::before {
+    opacity: 1;
+}
+
 /* Esconder a bolinha do radio, deixando só o texto-menu */
 section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label > div:first-child {
     display: none !important;
@@ -491,6 +511,13 @@ section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:has(input:
     width: 34px;
     height: 34px;
     object-fit: contain;
+}
+
+.icon-footer {
+    width: 16px;
+    height: 16px;
+    margin-right: 0;
+    margin-left: 4px;
 }
 
 /* ------------------------------------------------------------
