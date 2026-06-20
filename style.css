@@ -87,16 +87,23 @@ header[data-testid="stHeader"] {
     overflow: visible !important;
 }
 
-/* Reativa o clique apenas nos controles dentro do header */
-header[data-testid="stHeader"] [data-testid="stSidebarCollapsedControl"],
-header[data-testid="stHeader"] [data-testid="collapsedControl"] {
+/* Reativa o clique em TODOS os controles dentro do header.
+   Usamos o curinga (*) em vez de listar data-testids específicos,
+   porque o nome do botão de expandir a sidebar muda entre versões
+   do Streamlit (stSidebarCollapsedControl, collapsedControl,
+   stExpandSidebarButton...). Reativar todos garante que o botão
+   de reabrir sempre receba o clique. */
+header[data-testid="stHeader"] * {
     pointer-events: auto !important;
 }
 
 /* Botão de expandir a sidebar quando ela está recolhida:
-   garantir que continue visível, clicável e acima do conteúdo */
+   garantir que continue visível, clicável e acima do conteúdo.
+   Cobrimos todos os nomes de data-testid conhecidos. */
 [data-testid="stSidebarCollapsedControl"],
-[data-testid="collapsedControl"] {
+[data-testid="collapsedControl"],
+[data-testid="stExpandSidebarButton"],
+[data-testid="stSidebarCollapseButton"] {
     visibility: visible !important;
     display: flex !important;
     opacity: 1 !important;
@@ -108,18 +115,23 @@ header[data-testid="stHeader"] [data-testid="collapsedControl"] {
 }
 
 [data-testid="stSidebarCollapsedControl"] button,
-[data-testid="collapsedControl"] button {
+[data-testid="collapsedControl"] button,
+[data-testid="stExpandSidebarButton"] button,
+[data-testid="stSidebarCollapseButton"] button {
     color: var(--text-primary) !important;
     background: var(--bg-card) !important;
     border: 1px solid var(--border) !important;
     border-radius: var(--radius-sm) !important;
     box-shadow: var(--shadow-md) !important;
     pointer-events: auto !important;
+    cursor: pointer !important;
     transition: var(--transition);
 }
 
 [data-testid="stSidebarCollapsedControl"] button:hover,
-[data-testid="collapsedControl"] button:hover {
+[data-testid="collapsedControl"] button:hover,
+[data-testid="stExpandSidebarButton"] button:hover,
+[data-testid="stSidebarCollapseButton"] button:hover {
     border-color: var(--accent) !important;
     color: var(--accent) !important;
 }
