@@ -44,8 +44,32 @@ def get_photo_b64() -> str:
                 return f"data:image/{ext};base64,{base64.b64encode(f.read()).decode()}"
     return ""
 
+def get_icon_b64(icon_name: str) -> str:
+    path = Path(__file__).parent / "assets" / icon_name
+    if path.exists():
+        with open(path, "rb") as f:
+            ext = path.suffix.lstrip(".")
+            return f"data:image/{ext};base64,{base64.b64encode(f.read()).decode()}"
+    return ""
+
 load_css("style.css")
 FOTO_B64 = get_photo_b64()
+
+# Ícones (Base64) — usados nos títulos, localização e cards de contato
+HOME_ICON = get_icon_b64("home.png")
+USER_ICON = get_icon_b64("user.png")
+SUITCASE_ICON = get_icon_b64("suitcase.png")
+GRADUATION_ICON = get_icon_b64("graduation.png")
+COMPETENCIA_ICON = get_icon_b64("flash (1).png")
+STARTUP_ICON = get_icon_b64("start-up.png")
+
+LOCATION_ICON = get_icon_b64("localizacao.png")
+LINKEDIN_ICON = get_icon_b64("linkedin.png")
+GITHUB_ICON = get_icon_b64("github-logo.png")
+GMAIL_ICON = get_icon_b64("gmail.png")
+PHONE_ICON = get_icon_b64("telephone.png")
+WHATSAPP_ICON = get_icon_b64("whatsapp.png")
+PYTHON_ICON = get_icon_b64("python.png")
 
 # ============================================================
 # DADOS DO PERFIL (centralizados para fácil manutenção)
@@ -318,13 +342,17 @@ def render_header():
             <div class="header-text">
                 <h1 class="header-name">{PERFIL['nome']}</h1>
                 <p class="header-role">{PERFIL['cargo']}</p>
-                <p class="header-location">📍 {PERFIL['localizacao']}</p>
+                <p class="header-location">
+                    <img src="{LOCATION_ICON}" class="icon"/>{PERFIL['localizacao']}
+                </p>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
 def render_sobre():
-    st.markdown("<h2 class='section-title'>👤 Sobre Mim</h2>", unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 class='section-title'><img src='{USER_ICON}' class='icon-title'/>Sobre Mim</h2>",
+        unsafe_allow_html=True)
     st.markdown(f"<div class='about-card'><p>{PERFIL['resumo']}</p></div>",
                 unsafe_allow_html=True)
 
@@ -345,8 +373,10 @@ def render_sobre():
             """, unsafe_allow_html=True)
 
 def render_experiencias():
-    st.markdown("<h2 class='section-title'>💼 Experiência Profissional</h2>",
-                unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 class='section-title'><img src='{SUITCASE_ICON}' class='icon-title'/>"
+        "Experiência Profissional</h2>",
+        unsafe_allow_html=True)
     for exp in EXPERIENCIAS:
         tags_html = "".join([f"<span class='tag'>{t}</span>" for t in exp["tags"]])
         st.markdown(f"""
@@ -364,8 +394,10 @@ def render_experiencias():
         """, unsafe_allow_html=True)
 
 def render_formacao():
-    st.markdown("<h2 class='section-title'>🎓 Formação Acadêmica</h2>",
-                unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 class='section-title'><img src='{GRADUATION_ICON}' class='icon-title'/>"
+        "Formação Acadêmica</h2>",
+        unsafe_allow_html=True)
     for f in FORMACOES:
         status_class = "status-cursando" if f["status"] == "Cursando" else \
                        "status-trancado" if f["status"] == "Trancado" else \
@@ -401,8 +433,10 @@ def render_formacao():
             """, unsafe_allow_html=True)
 
 def render_competencias():
-    st.markdown("<h2 class='section-title'>⚡ Competências Técnicas</h2>",
-                unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 class='section-title'><img src='{COMPETENCIA_ICON}' class='icon-title'/>"
+        "Competências Técnicas</h2>",
+        unsafe_allow_html=True)
     for categoria, skills in COMPETENCIAS.items():
         st.markdown(f"<h3 class='skill-category'>{categoria}</h3>",
                     unsafe_allow_html=True)
@@ -420,8 +454,10 @@ def render_competencias():
             """, unsafe_allow_html=True)
 
 def render_projetos():
-    st.markdown("<h2 class='section-title'>🚀 Projetos & Realizações</h2>",
-                unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 class='section-title'><img src='{STARTUP_ICON}' class='icon-title'/>"
+        "Projetos &amp; Realizações</h2>",
+        unsafe_allow_html=True)
     cols = st.columns(2)
     for i, p in enumerate(PROJETOS):
         with cols[i % 2]:
@@ -439,8 +475,10 @@ def render_projetos():
             """, unsafe_allow_html=True)
 
 def render_contato():
-    st.markdown("<h2 class='section-title'>📬 Vamos Conversar?</h2>",
-                unsafe_allow_html=True)
+    st.markdown(
+        f"<h2 class='section-title'><img src='{GMAIL_ICON}' class='icon-title'/>"
+        "Vamos Conversar?</h2>",
+        unsafe_allow_html=True)
     st.markdown(f"""
         <div class="contato-container">
             <p class="contato-intro">
@@ -449,22 +487,22 @@ def render_contato():
             </p>
             <div class="contato-grid">
                 <a href="mailto:{PERFIL['email']}" class="contato-card">
-                    <div class="contato-icone">📧</div>
+                    <div class="contato-icone"><img src="{GMAIL_ICON}" class="icon-contact"/></div>
                     <div class="contato-label">E-mail</div>
                     <div class="contato-valor">{PERFIL['email']}</div>
                 </a>
                 <a href="{PERFIL['linkedin']}" target="_blank" class="contato-card">
-                    <div class="contato-icone">💼</div>
+                    <div class="contato-icone"><img src="{LINKEDIN_ICON}" class="icon-contact"/></div>
                     <div class="contato-label">LinkedIn</div>
                     <div class="contato-valor">rai-eduardo-cardoso</div>
                 </a>
                 <a href="{PERFIL['github']}" target="_blank" class="contato-card">
-                    <div class="contato-icone">💻</div>
+                    <div class="contato-icone"><img src="{GITHUB_ICON}" class="icon-contact"/></div>
                     <div class="contato-label">GitHub</div>
                     <div class="contato-valor">RaiEduardoC</div>
                 </a>
                 <a href="https://wa.me/5544984473227" target="_blank" class="contato-card">
-                    <div class="contato-icone">📱</div>
+                    <div class="contato-icone"><img src="{WHATSAPP_ICON}" class="icon-contact"/></div>
                     <div class="contato-label">WhatsApp</div>
                     <div class="contato-valor">{PERFIL['telefone']}</div>
                 </a>
@@ -491,16 +529,16 @@ with st.sidebar:
 
     pagina = st.radio(
         "Navegação",
-        ["🏠 Início", "💼 Experiência", "🎓 Formação",
-         "⚡ Competências", "🚀 Projetos", "📬 Contato"],
+        ["Início", "Experiência", "Formação",
+         "Competências", "Projetos", "Contato"],
         label_visibility="collapsed"
     )
 
     st.markdown("---")
     st.markdown(f"""
         <div class="sidebar-links">
-            <a href="{PERFIL['linkedin']}" target="_blank">🔗 LinkedIn</a>
-            <a href="{PERFIL['github']}" target="_blank">🔗 GitHub</a>
+            <a href="{PERFIL['linkedin']}" target="_blank">LinkedIn</a>
+            <a href="{PERFIL['github']}" target="_blank">GitHub</a>
         </div>
     """, unsafe_allow_html=True)
 
@@ -510,17 +548,17 @@ with st.sidebar:
 render_header()
 st.markdown("<hr class='divider'/>", unsafe_allow_html=True)
 
-if pagina == "🏠 Início":
+if pagina == "Início":
     render_sobre()
-elif pagina == "💼 Experiência":
+elif pagina == "Experiência":
     render_experiencias()
-elif pagina == "🎓 Formação":
+elif pagina == "Formação":
     render_formacao()
-elif pagina == "⚡ Competências":
+elif pagina == "Competências":
     render_competencias()
-elif pagina == "🚀 Projetos":
+elif pagina == "Projetos":
     render_projetos()
-elif pagina == "📬 Contato":
+elif pagina == "Contato":
     render_contato()
 
 # ============================================================

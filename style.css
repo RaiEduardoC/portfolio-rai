@@ -469,6 +469,31 @@ section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:has(input:
 }
 
 /* ------------------------------------------------------------
+   ÍCONES (PNG em Base64)
+   ------------------------------------------------------------ */
+.icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: -3px;
+    margin-right: 8px;
+    object-fit: contain;
+}
+
+.icon-title {
+    width: 26px;
+    height: 26px;
+    vertical-align: -4px;
+    margin-right: 12px;
+    object-fit: contain;
+}
+
+.icon-contact {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+}
+
+/* ------------------------------------------------------------
    SOBRE / MÉTRICAS
    ------------------------------------------------------------ */
 .about-card {
