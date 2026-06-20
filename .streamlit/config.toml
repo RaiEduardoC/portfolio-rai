@@ -1,15 +1,16 @@
 [theme]
 base = "dark"
 primaryColor = "#58A6FF"
-backgroundColor = "#0E1117"
-secondaryBackgroundColor = "#161B22"
-textColor = "#FFFFFF"
+backgroundColor = "#0A0E14"
+secondaryBackgroundColor = "#141B26"
+textColor = "#F0F6FC"
 font = "sans serif"
 
 [server]
 headless = true
+# enableXsrfProtection já força o CORS; não definir enableCORS evita o
+# warning de conflito ("server.enableCORS is being overridden").
 enableXsrfProtection = true
-enableCORS = false
 
 [browser]
 gatherUsageStats = false
