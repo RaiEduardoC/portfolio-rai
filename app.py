@@ -73,7 +73,7 @@ PYTHON_ICON = get_icon_b64("python.png")
 
 # Ícones do menu lateral: o st.radio não aceita HTML nas opções, então
 # injetamos a imagem (Base64) via CSS ::before em cada item, na ordem do menu.
-_MENU_ICONS = [HOME_ICON, SUITCASE_ICON, GRADUATION_ICON,
+_MENU_ICONS = [HOME_ICON, SUITCASE_ICON, GRADUATION_ICON, GRADUATION_ICON,
                COMPETENCIA_ICON, STARTUP_ICON, PHONE_ICON]
 _menu_css = "".join(
     f'section[data-testid="stSidebar"] .stRadio [role="radiogroup"] '
@@ -248,6 +248,48 @@ CURSOS = [
         "icone": "🧠"
     }
 ]
+
+# Pasta com os PDFs dos certificados (download direto no site)
+CERTIFICADOS_DIR = Path(__file__).parent / "Certificados"
+
+# Metadados opcionais por nome do arquivo (sem extensão) para refinar o card.
+# Arquivos não mapeados ainda aparecem na galeria com um título derivado do nome.
+CERTIFICADOS_META = {
+    "Certificado de conclusão SQL Extremo":
+        ("SQL Extremo — Avançado", "Hashtag Treinamentos", "2025", "🗃️"),
+    "Certificado de conclusão PLSQL Oracle":
+        ("PL/SQL Oracle", "Hashtag Treinamentos", "2025", "🛢️"),
+    "Certificado de conclusão Analista de Dados com Power BI":
+        ("Analista de Dados com Power BI", "Eduliv School Tec", "2024", "📊"),
+    "Certificado de conclusão Excel Extremo":
+        ("Excel Extremo — Avançado", "Eduliv School Tec", "2024", "📈"),
+    "Certificado de conclusão Python Extremo":
+        ("Python Extremo", "Hashtag Treinamentos", "2025", "🐍"),
+    "Certificado (Git - GitHub) #Hashtag Treinamentos":
+        ("Git & GitHub", "Hashtag Treinamentos", "2025", "🔧"),
+    "Certificado Anhanguera":
+        ("Data Science — Análise, ETL & BI", "Anhanguera", "2025", "🧠"),
+    "24169057-9 Unicesumar Tecnico":
+        ("Técnico em Análise e Desenvolvimento de Sistemas", "Unicesumar",
+         "Concluído", "💻"),
+}
+
+def get_certificados():
+    """Lê a pasta Certificados e devolve a lista de PDFs para a galeria."""
+    if not CERTIFICADOS_DIR.exists():
+        return []
+    itens = []
+    for pdf in sorted(CERTIFICADOS_DIR.glob("*.pdf")):
+        meta = CERTIFICADOS_META.get(pdf.stem)
+        if meta:
+            titulo, escola, ano, icone = meta
+        else:
+            titulo, escola, ano, icone = pdf.stem, "", "", "📄"
+        itens.append({
+            "path": pdf, "titulo": titulo,
+            "escola": escola, "ano": ano, "icone": icone,
+        })
+    return itens
 
 COMPETENCIAS = {
     "Linguagens & Bancos de Dados": [
@@ -443,6 +485,45 @@ def render_formacao():
                 </div>
             """, unsafe_allow_html=True)
 
+def render_certificados():
+    st.markdown(
+        f"<h2 class='section-title'><img src='{GRADUATION_ICON}' class='icon-title'/>"
+        "Certificados</h2>",
+        unsafe_allow_html=True)
+
+    certs = get_certificados()
+    if not certs:
+        st.info("Nenhum certificado disponível no momento.")
+        return
+
+    st.markdown(
+        f"<p class='cert-intro'>Galeria com meus certificados de conclusão. "
+        f"Todos estão disponíveis para <strong>download em PDF</strong> — "
+        f"são <strong>{len(certs)}</strong> certificados no total.</p>",
+        unsafe_allow_html=True)
+
+    cols = st.columns(3)
+    for i, c in enumerate(certs):
+        with cols[i % 3]:
+            escola_ano = " · ".join(p for p in (c["escola"], c["ano"]) if p)
+            st.markdown(f"""
+                <div class="cert-card">
+                    <span class="cert-badge">PDF</span>
+                    <div class="cert-icone">{c['icone']}</div>
+                    <h4 class="cert-titulo">{c['titulo']}</h4>
+                    <p class="cert-escola">{escola_ano}</p>
+                </div>
+            """, unsafe_allow_html=True)
+            with open(c["path"], "rb") as f:
+                st.download_button(
+                    label="⬇  Baixar PDF",
+                    data=f.read(),
+                    file_name=c["path"].name,
+                    mime="application/pdf",
+                    key=f"cert_dl_{i}",
+                    use_container_width=True,
+                )
+
 def render_competencias():
     st.markdown(
         f"<h2 class='section-title'><img src='{COMPETENCIA_ICON}' class='icon-title'/>"
@@ -540,7 +621,7 @@ with st.sidebar:
 
     pagina = st.radio(
         "Navegação",
-        ["Início", "Experiência", "Formação",
+        ["Início", "Experiência", "Formação", "Certificados",
          "Competências", "Projetos", "Contato"],
         label_visibility="collapsed"
     )
@@ -569,6 +650,8 @@ elif pagina == "Experiência":
     render_experiencias()
 elif pagina == "Formação":
     render_formacao()
+elif pagina == "Certificados":
+    render_certificados()
 elif pagina == "Competências":
     render_competencias()
 elif pagina == "Projetos":
