@@ -70,6 +70,12 @@ GMAIL_ICON = get_icon_b64("gmail.png")
 PHONE_ICON = get_icon_b64("telephone.png")
 WHATSAPP_ICON = get_icon_b64("whatsapp.png")
 PYTHON_ICON = get_icon_b64("python.png")
+ANHANGUERA_ICON = get_icon_b64("anhanguera.png")
+UNICESUMAR_ICON = get_icon_b64("Unicesumar.png")
+POWERBI_ICON = get_icon_b64("power_bi.png")
+EXCEL_ICON = get_icon_b64("excel.png")
+SQL_ICON = get_icon_b64("sql.png")
+ORACLE_ICON = get_icon_b64("oracle.png")
 
 # Ícones do menu lateral: o st.radio não aceita HTML nas opções, então
 # injetamos a imagem (Base64) via CSS ::before em cada item, na ordem do menu.
@@ -256,22 +262,22 @@ CERTIFICADOS_DIR = Path(__file__).parent / "Certificados"
 # Arquivos não mapeados ainda aparecem na galeria com um título derivado do nome.
 CERTIFICADOS_META = {
     "Certificado de conclusão SQL Extremo":
-        ("SQL Extremo — Avançado", "Hashtag Treinamentos", "2025", "🗃️"),
+        ("SQL Extremo — Avançado", "Eduliv School Tec", "2025", f"<img src='{SQL_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão PLSQL Oracle":
-        ("PL/SQL Oracle", "Hashtag Treinamentos", "2025", "🛢️"),
+        ("PL/SQL Oracle", "Ûdemy", "2025", f"<img src='{ORACLE_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão Analista de Dados com Power BI":
-        ("Analista de Dados com Power BI", "Eduliv School Tec", "2024", "📊"),
+        ("Analista de Dados com Power BI", "Eduliv School Tec", "2024", f"<img src='{POWERBI_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão Excel Extremo":
-        ("Excel Extremo — Avançado", "Eduliv School Tec", "2024", "📈"),
+        ("Excel Extremo — Avançado", "Eduliv School Tec", "2024", f"<img src='{EXCEL_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão Python Extremo":
-        ("Python Extremo", "Hashtag Treinamentos", "2025", "🐍"),
+        ("Python Extremo", "Eduliv School Tec", "2025", f"<img src='{PYTHON_ICON}' class='icon icon-footer'/>"),
     "Certificado (Git - GitHub) #Hashtag Treinamentos":
-        ("Git & GitHub", "Hashtag Treinamentos", "2025", "🔧"),
+        ("Git & GitHub", "Hashtag Treinamentos", "2025", f"<img src='{GITHUB_ICON}' class='icon icon-footer'/>"),
     "Certificado Anhanguera":
-        ("Data Science — Análise, ETL & BI", "Anhanguera", "2025", "🧠"),
+        ("Data Science — Análise, ETL & BI", "Anhanguera", "2025", f"<img src='{ANHANGUERA_ICON}' class='icon icon-footer'/>"),
     "24169057-9 Unicesumar Tecnico":
         ("Técnico em Análise e Desenvolvimento de Sistemas", "Unicesumar",
-         "Concluído", "💻"),
+         "Concluído", f"<img src='{UNICESUMAR_ICON}' class='icon icon-footer'/>"),
 }
 
 def get_certificados():
