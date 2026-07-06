@@ -422,9 +422,6 @@ def render_header():
         <div class="header-container">
             {avatar}
             <div class="header-text">
-                <div class="badge-disponivel">
-                    <span class="badge-dot"></span>Disponível para novos desafios
-                </div>
                 <h1 class="header-name">{PERFIL['nome']}</h1>
                 <p class="header-role">{PERFIL['cargo']}</p>
                 <p class="header-location">
