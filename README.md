@@ -9,8 +9,9 @@ Portfólio profissional com seções de experiência, formação acadêmica, com
 ## Tecnologias
 
 - Python 3.10+
-- Streamlit 1.39+
-- HTML / CSS customizado
+- Streamlit 1.43 (versão fixada — garante o mesmo comportamento local e na nuvem)
+- HTML / CSS customizado (tema dark, glassmorphism, timeline)
+- Cache nativo do Streamlit (`st.cache_data` / `st.cache_resource`) para assets e PDFs
 
 ## Como executar localmente
 

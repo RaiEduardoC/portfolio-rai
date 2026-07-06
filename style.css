@@ -1264,3 +1264,185 @@ section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:has(input:
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
 }
+
+/* ------------------------------------------------------------
+   GLASSMORPHISM REAL — cards translúcidos com blur, deixando o
+   gradiente de fundo "vazar" sutilmente (tendência atual)
+   ------------------------------------------------------------ */
+.about-card, .metric-card, .exp-card, .form-card,
+.curso-card, .projeto-card, .contato-card, .cert-card {
+    background: rgba(20, 27, 38, 0.72);
+    backdrop-filter: blur(14px) saturate(1.15);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+}
+
+.metric-card:hover, .exp-card:hover, .form-card:hover,
+.curso-card:hover, .projeto-card:hover, .cert-card:hover {
+    background: rgba(24, 32, 45, 0.85);
+}
+
+/* ------------------------------------------------------------
+   SELO "DISPONÍVEL" (hero) — badge com ponto pulsante
+   ------------------------------------------------------------ */
+.badge-disponivel {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(63, 185, 80, 0.10);
+    border: 1px solid rgba(63, 185, 80, 0.35);
+    color: var(--success);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 0.3rem 0.9rem;
+    border-radius: 100px;
+    margin-bottom: 0.9rem;
+    animation: fadeIn 0.9s var(--ease);
+}
+
+.badge-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    animation: pulseDot 2s ease-out infinite;
+}
+
+@keyframes pulseDot {
+    0%   { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0.45); }
+    70%  { box-shadow: 0 0 0 8px rgba(63, 185, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(63, 185, 80, 0); }
+}
+
+/* ------------------------------------------------------------
+   BOTÕES CTA (st.button) — primário em gradiente, secundário ghost
+   ------------------------------------------------------------ */
+.stButton button {
+    border-radius: var(--radius-sm) !important;
+    font-weight: 600 !important;
+    font-family: 'Inter', sans-serif !important;
+    padding: 0.6rem 1.2rem !important;
+    transition: var(--transition) !important;
+}
+
+.stButton button[kind="primary"] {
+    background: var(--grad-accent) !important;
+    border: none !important;
+    color: #FFFFFF !important;
+    box-shadow: 0 4px 18px var(--accent-glow);
+}
+
+.stButton button[kind="primary"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px var(--accent-glow);
+    filter: brightness(1.08);
+}
+
+.stButton button[kind="secondary"] {
+    background: var(--bg-elevated) !important;
+    color: var(--accent) !important;
+    border: 1px solid rgba(88, 166, 255, 0.35) !important;
+}
+
+.stButton button[kind="secondary"]:hover {
+    background: var(--accent-soft) !important;
+    border-color: var(--accent) !important;
+    transform: translateY(-2px);
+}
+
+.stButton button p { color: inherit !important; }
+
+/* ------------------------------------------------------------
+   TIMELINE — linha do tempo vertical na Experiência Profissional
+   ------------------------------------------------------------ */
+.timeline {
+    position: relative;
+    padding-left: 30px;
+}
+
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 10px;
+    bottom: 10px;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--accent) 0%, var(--accent-3) 60%, transparent 100%);
+    opacity: 0.5;
+}
+
+.timeline-item {
+    position: relative;
+}
+
+.timeline-item::before {
+    content: "";
+    position: absolute;
+    left: -27px;
+    top: 26px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--grad-accent);
+    box-shadow: 0 0 0 4px var(--accent-glow);
+    z-index: 1;
+}
+
+/* Primeiro item (cargo atual) com dot destacado */
+.timeline-item:first-child::before {
+    background: var(--success);
+    box-shadow: 0 0 0 4px rgba(63, 185, 80, 0.22);
+    animation: pulseDot 2.4s ease-out infinite;
+}
+
+/* ------------------------------------------------------------
+   SKILL LEVEL — rótulo qualitativo (pill) em vez de porcentagem
+   ------------------------------------------------------------ */
+.skill-level {
+    font-family: 'Inter', sans-serif;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.07em;
+    background: var(--accent-soft);
+    border: 1px solid rgba(88, 166, 255, 0.25);
+    padding: 0.14rem 0.6rem;
+    border-radius: 100px;
+}
+
+/* ------------------------------------------------------------
+   ACESSIBILIDADE
+   ------------------------------------------------------------ */
+:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* Respeita usuários que desativam animações no sistema operacional */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ------------------------------------------------------------
+   RESPONSIVO — ajustes extras para telas pequenas
+   ------------------------------------------------------------ */
+@media (max-width: 768px) {
+    .timeline { padding-left: 22px; }
+    .timeline-item::before { left: -19px; width: 10px; height: 10px; }
+    .timeline::before { left: 3px; }
+    .badge-disponivel { margin-left: auto; margin-right: auto; }
+    .header-name { word-break: break-word; }
+    .contato-grid { grid-template-columns: 1fr 1fr; gap: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+    .contato-grid { grid-template-columns: 1fr; }
+    .header-avatar { width: 96px; height: 96px; }
+    .section-title { font-size: 1.4rem !important; }
+    .block-container { padding-left: 1rem !important; padding-right: 1rem !important; }
+}

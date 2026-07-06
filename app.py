@@ -1,11 +1,15 @@
-import streamlit as st
-from pathlib import Path
 import base64
+import html
+from datetime import date
+from pathlib import Path
+
+import streamlit as st
 from PIL import Image
 
 # ============================================================
 # HELPERS DE ASSETS (devem vir antes de set_page_config)
 # ============================================================
+@st.cache_resource(show_spinner=False)
 def get_page_icon():
     for name in ("assets/foto_perfil.jpg", "assets/foto_perfil.jpeg",
                  "assets/foto_perfil.png"):
@@ -25,32 +29,45 @@ st.set_page_config(
 )
 
 # ============================================================
-# CARREGAR CSS EXTERNO
+# CARREGAR CSS EXTERNO (com cache — evita reler o arquivo a cada rerun)
 # ============================================================
+@st.cache_data(show_spinner=False)
+def _read_css(file_name: str, mtime: float) -> str:
+    # mtime entra na chave do cache: se o CSS mudar, o cache invalida sozinho.
+    css_path = Path(__file__).parent / file_name
+    return css_path.read_text(encoding="utf-8")
+
 def load_css(file_name: str) -> None:
     css_path = Path(__file__).parent / file_name
     if css_path.exists():
-        with open(css_path, "r", encoding="utf-8") as f:
-            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+        css = _read_css(file_name, css_path.stat().st_mtime)
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
 
+@st.cache_data(show_spinner=False)
 def get_photo_b64() -> str:
     for name in ("assets/foto_perfil.jpg", "assets/foto_perfil.jpeg",
                  "assets/foto_perfil.png", "foto_perfil.jpg",
                  "foto_perfil.jpeg", "foto_perfil.png"):
         path = Path(__file__).parent / name
         if path.exists():
-            with open(path, "rb") as f:
-                ext = path.suffix.lstrip(".").replace("jpg", "jpeg")
-                return f"data:image/{ext};base64,{base64.b64encode(f.read()).decode()}"
+            ext = path.suffix.lstrip(".").replace("jpg", "jpeg")
+            data = base64.b64encode(path.read_bytes()).decode()
+            return f"data:image/{ext};base64,{data}"
     return ""
 
+@st.cache_data(show_spinner=False)
 def get_icon_b64(icon_name: str) -> str:
     path = Path(__file__).parent / "assets" / icon_name
     if path.exists():
-        with open(path, "rb") as f:
-            ext = path.suffix.lstrip(".")
-            return f"data:image/{ext};base64,{base64.b64encode(f.read()).decode()}"
+        ext = path.suffix.lstrip(".")
+        data = base64.b64encode(path.read_bytes()).decode()
+        return f"data:image/{ext};base64,{data}"
     return ""
+
+@st.cache_data(show_spinner=False)
+def get_pdf_bytes(path_str: str, mtime: float) -> bytes:
+    # Cacheia o conteúdo dos PDFs para não reler do disco a cada rerun.
+    return Path(path_str).read_bytes()
 
 load_css("style.css")
 FOTO_B64 = get_photo_b64()
@@ -264,7 +281,7 @@ CERTIFICADOS_META = {
     "Certificado de conclusão SQL Extremo":
         ("SQL Extremo — Avançado", "Eduliv School Tec", "2025", f"<img src='{SQL_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão PLSQL Oracle":
-        ("PL/SQL Oracle", "Ûdemy", "2025", f"<img src='{ORACLE_ICON}' class='icon icon-footer'/>"),
+        ("PL/SQL Oracle", "Udemy", "2025", f"<img src='{ORACLE_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão Analista de Dados com Power BI":
         ("Analista de Dados com Power BI", "Eduliv School Tec", "2024", f"<img src='{POWERBI_ICON}' class='icon icon-footer'/>"),
     "Certificado de conclusão Excel Extremo":
@@ -290,7 +307,9 @@ def get_certificados():
         if meta:
             titulo, escola, ano, icone = meta
         else:
-            titulo, escola, ano, icone = pdf.stem, "", "", "📄"
+            # Título derivado do nome do arquivo: escapa HTML por segurança,
+            # já que o card é renderizado com unsafe_allow_html.
+            titulo, escola, ano, icone = html.escape(pdf.stem), "", "", "📄"
         itens.append({
             "path": pdf, "titulo": titulo,
             "escola": escola, "ano": ano, "icone": icone,
@@ -389,6 +408,10 @@ PROJETOS = [
 # ============================================================
 # COMPONENTES VISUAIS
 # ============================================================
+def _goto(page: str) -> None:
+    """Callback de navegação: muda a página selecionada no menu lateral."""
+    st.session_state.nav = page
+
 def render_header():
     avatar = (
         f'<img src="{FOTO_B64}" class="header-avatar photo" alt="Raí Eduardo Cardoso"/>'
@@ -399,10 +422,13 @@ def render_header():
         <div class="header-container">
             {avatar}
             <div class="header-text">
+                <div class="badge-disponivel">
+                    <span class="badge-dot"></span>Disponível para novos desafios
+                </div>
                 <h1 class="header-name">{PERFIL['nome']}</h1>
                 <p class="header-role">{PERFIL['cargo']}</p>
                 <p class="header-location">
-                    <img src="{LOCATION_ICON}" class="icon"/>{PERFIL['localizacao']}
+                    <img src="{LOCATION_ICON}" class="icon" alt=""/>{PERFIL['localizacao']}
                 </p>
             </div>
         </div>
@@ -410,10 +436,18 @@ def render_header():
 
 def render_sobre():
     st.markdown(
-        f"<h2 class='section-title'><img src='{USER_ICON}' class='icon-title'/>Sobre Mim</h2>",
+        f"<h2 class='section-title'><img src='{USER_ICON}' class='icon-title' alt=''/>Sobre Mim</h2>",
         unsafe_allow_html=True)
     st.markdown(f"<div class='about-card'><p>{PERFIL['resumo']}</p></div>",
                 unsafe_allow_html=True)
+
+    cta1, cta2, _sp = st.columns([1.1, 1.1, 2.8])
+    with cta1:
+        st.button("🚀  Ver Projetos", key="cta_projetos", type="primary",
+                  use_container_width=True, on_click=_goto, args=("Projetos",))
+    with cta2:
+        st.button("💬  Fale Comigo", key="cta_contato",
+                  use_container_width=True, on_click=_goto, args=("Contato",))
 
     col1, col2, col3, col4 = st.columns(4)
     metrics = [
@@ -433,28 +467,34 @@ def render_sobre():
 
 def render_experiencias():
     st.markdown(
-        f"<h2 class='section-title'><img src='{SUITCASE_ICON}' class='icon-title'/>"
+        f"<h2 class='section-title'><img src='{SUITCASE_ICON}' class='icon-title' alt=''/>"
         "Experiência Profissional</h2>",
         unsafe_allow_html=True)
+    # Todos os cards em UM único bloco HTML: permite a linha do tempo
+    # contínua (CSS .timeline) e reduz o nº de elementos re-renderizados.
+    itens = []
     for exp in EXPERIENCIAS:
-        tags_html = "".join([f"<span class='tag'>{t}</span>" for t in exp["tags"]])
-        st.markdown(f"""
-            <div class="exp-card">
-                <div class="exp-header">
-                    <div>
-                        <h3 class="exp-cargo">{exp['cargo']}</h3>
-                        <p class="exp-empresa">{exp['empresa']} · {exp['local']}</p>
+        tags_html = "".join(f"<span class='tag'>{t}</span>" for t in exp["tags"])
+        itens.append(f"""
+            <div class="timeline-item">
+                <div class="exp-card">
+                    <div class="exp-header">
+                        <div>
+                            <h3 class="exp-cargo">{exp['cargo']}</h3>
+                            <p class="exp-empresa">{exp['empresa']} · {exp['local']}</p>
+                        </div>
+                        <span class="exp-periodo">{exp['periodo']}</span>
                     </div>
-                    <span class="exp-periodo">{exp['periodo']}</span>
+                    <p class="exp-descricao">{exp['descricao']}</p>
+                    <div class="tags-container">{tags_html}</div>
                 </div>
-                <p class="exp-descricao">{exp['descricao']}</p>
-                <div class="tags-container">{tags_html}</div>
-            </div>
-        """, unsafe_allow_html=True)
+            </div>""")
+    st.markdown(f'<div class="timeline">{"".join(itens)}</div>',
+                unsafe_allow_html=True)
 
 def render_formacao():
     st.markdown(
-        f"<h2 class='section-title'><img src='{GRADUATION_ICON}' class='icon-title'/>"
+        f"<h2 class='section-title'><img src='{GRADUATION_ICON}' class='icon-title' alt=''/>"
         "Formação Acadêmica</h2>",
         unsafe_allow_html=True)
     for f in FORMACOES:
@@ -493,7 +533,7 @@ def render_formacao():
 
 def render_certificados():
     st.markdown(
-        f"<h2 class='section-title'><img src='{GRADUATION_ICON}' class='icon-title'/>"
+        f"<h2 class='section-title'><img src='{GRADUATION_ICON}' class='icon-title' alt=''/>"
         "Certificados</h2>",
         unsafe_allow_html=True)
 
@@ -520,40 +560,50 @@ def render_certificados():
                     <p class="cert-escola">{escola_ano}</p>
                 </div>
             """, unsafe_allow_html=True)
-            with open(c["path"], "rb") as f:
-                st.download_button(
-                    label="⬇  Baixar PDF",
-                    data=f.read(),
-                    file_name=c["path"].name,
-                    mime="application/pdf",
-                    key=f"cert_dl_{i}",
-                    use_container_width=True,
-                )
+            pdf = c["path"]
+            st.download_button(
+                label="⬇  Baixar PDF",
+                data=get_pdf_bytes(str(pdf), pdf.stat().st_mtime),
+                file_name=pdf.name,
+                mime="application/pdf",
+                key=f"cert_dl_{i}",
+                use_container_width=True,
+            )
+
+def _nivel_label(nivel: int) -> str:
+    """Rótulo qualitativo: mais profissional (e crível) do que '100%'."""
+    if nivel >= 95:
+        return "Especialista"
+    if nivel >= 80:
+        return "Avançado"
+    if nivel >= 60:
+        return "Intermediário"
+    return "Em evolução"
 
 def render_competencias():
     st.markdown(
-        f"<h2 class='section-title'><img src='{COMPETENCIA_ICON}' class='icon-title'/>"
+        f"<h2 class='section-title'><img src='{COMPETENCIA_ICON}' class='icon-title' alt=''/>"
         "Competências Técnicas</h2>",
         unsafe_allow_html=True)
+    blocos = []
     for categoria, skills in COMPETENCIAS.items():
-        st.markdown(f"<h3 class='skill-category'>{categoria}</h3>",
-                    unsafe_allow_html=True)
-        for skill, nivel in skills:
-            st.markdown(f"""
-                <div class="skill-item">
-                    <div class="skill-header">
-                        <span class="skill-name">{skill}</span>
-                        <span class="skill-level">{nivel}%</span>
-                    </div>
-                    <div class="skill-bar">
-                        <div class="skill-fill" style="width: {nivel}%"></div>
-                    </div>
+        linhas = "".join(f"""
+            <div class="skill-item">
+                <div class="skill-header">
+                    <span class="skill-name">{skill}</span>
+                    <span class="skill-level">{_nivel_label(nivel)}</span>
                 </div>
-            """, unsafe_allow_html=True)
+                <div class="skill-bar">
+                    <div class="skill-fill" style="width: {nivel}%"></div>
+                </div>
+            </div>""" for skill, nivel in skills)
+        blocos.append(
+            f"<h3 class='skill-category'>{categoria}</h3>{linhas}")
+    st.markdown("".join(blocos), unsafe_allow_html=True)
 
 def render_projetos():
     st.markdown(
-        f"<h2 class='section-title'><img src='{STARTUP_ICON}' class='icon-title'/>"
+        f"<h2 class='section-title'><img src='{STARTUP_ICON}' class='icon-title' alt=''/>"
         "Projetos &amp; Realizações</h2>",
         unsafe_allow_html=True)
     cols = st.columns(2)
@@ -574,7 +624,7 @@ def render_projetos():
 
 def render_contato():
     st.markdown(
-        f"<h2 class='section-title'><img src='{GMAIL_ICON}' class='icon-title'/>"
+        f"<h2 class='section-title'><img src='{GMAIL_ICON}' class='icon-title' alt=''/>"
         "Vamos Conversar?</h2>",
         unsafe_allow_html=True)
     st.markdown(f"""
@@ -585,22 +635,22 @@ def render_contato():
             </p>
             <div class="contato-grid">
                 <a href="mailto:{PERFIL['email']}" class="contato-card">
-                    <div class="contato-icone"><img src="{GMAIL_ICON}" class="icon-contact"/></div>
+                    <div class="contato-icone"><img src="{GMAIL_ICON}" class="icon-contact" alt="E-mail"/></div>
                     <div class="contato-label">E-mail</div>
                     <div class="contato-valor">{PERFIL['email']}</div>
                 </a>
-                <a href="{PERFIL['linkedin']}" target="_blank" class="contato-card">
-                    <div class="contato-icone"><img src="{LINKEDIN_ICON}" class="icon-contact"/></div>
+                <a href="{PERFIL['linkedin']}" target="_blank" rel="noopener noreferrer" class="contato-card">
+                    <div class="contato-icone"><img src="{LINKEDIN_ICON}" class="icon-contact" alt="LinkedIn"/></div>
                     <div class="contato-label">LinkedIn</div>
                     <div class="contato-valor">rai-eduardo-cardoso</div>
                 </a>
-                <a href="{PERFIL['github']}" target="_blank" class="contato-card">
-                    <div class="contato-icone"><img src="{GITHUB_ICON}" class="icon-contact"/></div>
+                <a href="{PERFIL['github']}" target="_blank" rel="noopener noreferrer" class="contato-card">
+                    <div class="contato-icone"><img src="{GITHUB_ICON}" class="icon-contact" alt="GitHub"/></div>
                     <div class="contato-label">GitHub</div>
                     <div class="contato-valor">RaiEduardoC</div>
                 </a>
-                <a href="https://wa.me/5544984473227" target="_blank" class="contato-card">
-                    <div class="contato-icone"><img src="{WHATSAPP_ICON}" class="icon-contact"/></div>
+                <a href="https://wa.me/5544984473227" target="_blank" rel="noopener noreferrer" class="contato-card">
+                    <div class="contato-icone"><img src="{WHATSAPP_ICON}" class="icon-contact" alt="WhatsApp"/></div>
                     <div class="contato-label">WhatsApp</div>
                     <div class="contato-valor">{PERFIL['telefone']}</div>
                 </a>
@@ -629,17 +679,18 @@ with st.sidebar:
         "Navegação",
         ["Início", "Experiência", "Formação", "Certificados",
          "Competências", "Projetos", "Contato"],
-        label_visibility="collapsed"
+        label_visibility="collapsed",
+        key="nav",  # permite navegação programática (botões CTA da home)
     )
 
     st.markdown("---")
     st.markdown(f"""
         <div class="sidebar-links">
-            <a href="{PERFIL['linkedin']}" target="_blank">
-                <img src="{LINKEDIN_ICON}" class="icon"/>LinkedIn
+            <a href="{PERFIL['linkedin']}" target="_blank" rel="noopener noreferrer">
+                <img src="{LINKEDIN_ICON}" class="icon" alt=""/>LinkedIn
             </a>
-            <a href="{PERFIL['github']}" target="_blank">
-                <img src="{GITHUB_ICON}" class="icon"/>GitHub
+            <a href="{PERFIL['github']}" target="_blank" rel="noopener noreferrer">
+                <img src="{GITHUB_ICON}" class="icon" alt=""/>GitHub
             </a>
         </div>
     """, unsafe_allow_html=True)
@@ -670,7 +721,7 @@ elif pagina == "Contato":
 # ============================================================
 st.markdown(f"""
     <div class="footer">
-        <p>© 2026 Raí Eduardo Cardoso — Desenvolvido com Python &amp; Streamlit
-        <img src="{PYTHON_ICON}" class="icon icon-footer"/></p>
+        <p>© {date.today().year} Raí Eduardo Cardoso — Desenvolvido com Python &amp; Streamlit
+        <img src="{PYTHON_ICON}" class="icon icon-footer" alt="Python"/></p>
     </div>
 """, unsafe_allow_html=True)
