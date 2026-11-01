@@ -1446,3 +1446,241 @@ section[data-testid="stSidebar"] .stRadio [role="radiogroup"] > label:has(input:
     .section-title { font-size: 1.4rem !important; }
     .block-container { padding-left: 1rem !important; padding-right: 1rem !important; }
 }
+
+/* ============================================================
+   DIRECAO VISUAL 2026 — HERO EDITORIAL E SISTEMA DE INTERFACE
+   Camada de refinamento sem alterar a estrutura do Streamlit.
+   ============================================================ */
+:root {
+    --bg-primary: #090c10;
+    --bg-secondary: #0d1218;
+    --bg-card: #111820;
+    --bg-card-hover: #151e28;
+    --bg-elevated: #17212c;
+    --accent: #69b7ff;
+    --accent-2: #a8ddff;
+    --accent-3: #8798ff;
+    --text-primary: #f5f8fb;
+    --text-secondary: #c5ced8;
+    --text-muted: #8794a3;
+    --border: #26313d;
+    --border-soft: rgba(255, 255, 255, 0.075);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+}
+
+.stApp {
+    background: #090c10;
+}
+
+.block-container {
+    max-width: 1160px;
+    padding-top: 2.4rem !important;
+}
+
+/* Hero: a fotografia funciona como presenca, nao como avatar decorativo. */
+.header-container.hero-profile {
+    min-height: clamp(390px, 54vw, 590px);
+    padding: clamp(2rem, 5vw, 4.75rem);
+    margin: 0 0 2.25rem;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    border: 1px solid rgba(255, 255, 255, 0.11);
+    border-radius: var(--radius-lg);
+    background: #10161d;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.hero-profile-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -3;
+    object-fit: cover;
+    object-position: 72% 24%;
+    filter: saturate(0.82) contrast(1.05);
+    transform: scale(1.015);
+}
+
+.hero-profile.no-photo .hero-profile-bg {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 12%;
+    background: radial-gradient(circle at 75% 35%, rgba(88, 166, 255, 0.24), transparent 32%);
+}
+
+.hero-profile-initials {
+    color: rgba(240, 246, 252, 0.14);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: clamp(8rem, 22vw, 18rem);
+    font-weight: 800;
+    line-height: 1;
+}
+
+.hero-profile-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+        linear-gradient(90deg, rgba(5, 8, 12, 0.97) 0%, rgba(5, 8, 12, 0.86) 38%, rgba(5, 8, 12, 0.25) 70%, rgba(5, 8, 12, 0.12) 100%),
+        linear-gradient(0deg, rgba(5, 8, 12, 0.88) 0%, transparent 48%);
+}
+
+.header-text.hero-profile-content {
+    position: relative;
+    z-index: 1;
+    width: min(620px, 62%);
+    min-width: 0;
+    text-align: left;
+}
+
+.hero-profile .header-name {
+    max-width: 11ch;
+    margin: 0 0 0.75rem !important;
+    font-size: clamp(2.9rem, 6vw, 5.5rem) !important;
+    line-height: 0.91 !important;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+    color: #fff !important;
+    text-shadow: 0 3px 24px rgba(0, 0, 0, 0.5);
+}
+
+.hero-profile .header-role {
+    max-width: 32rem;
+    margin: 0 0 1.1rem;
+    color: var(--accent-2);
+    font-size: clamp(1rem, 1.7vw, 1.28rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.hero-profile .header-location {
+    color: rgba(239, 245, 251, 0.76);
+    font-size: 0.88rem;
+}
+
+.hero-profile .badge-disponivel {
+    margin: 0 0 1.25rem;
+    border-color: rgba(128, 220, 157, 0.35);
+    background: rgba(8, 22, 16, 0.62);
+    backdrop-filter: blur(8px);
+}
+
+/* Hierarquia e ritmo: seco, editorial e adequado a leitura de recrutamento. */
+.section-title {
+    margin: 3.4rem 0 1.35rem !important;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: clamp(1.55rem, 2.4vw, 2.1rem) !important;
+    letter-spacing: -0.035em;
+}
+
+.section-title::after { display: none; }
+.subsection-title { letter-spacing: -0.02em; }
+
+.about-card {
+    padding: clamp(1.25rem, 2.6vw, 2rem);
+    border-left: 3px solid var(--accent);
+    background: #10171f;
+    backdrop-filter: none;
+}
+
+.about-card p {
+    max-width: 76ch;
+    font-size: clamp(1rem, 1.4vw, 1.08rem);
+    line-height: 1.8;
+}
+
+.metric-card, .exp-card, .form-card, .curso-card,
+.projeto-card, .contato-card, .cert-card {
+    background: #111820;
+    backdrop-filter: none;
+    box-shadow: none;
+}
+
+.metric-card:hover, .exp-card:hover, .form-card:hover,
+.curso-card:hover, .projeto-card:hover, .cert-card:hover {
+    background: #151e28;
+}
+
+/* O recolhimento da sidebar e parte da navegacao, portanto nunca fica oculto. */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"],
+button[kind="headerNoPadding"][data-testid="stBaseButton-headerNoPadding"] {
+    z-index: 2147483000 !important;
+}
+
+[data-testid="stSidebarCollapsedControl"] button,
+[data-testid="collapsedControl"] button {
+    width: 40px !important;
+    height: 40px !important;
+    background: rgba(13, 18, 24, 0.96) !important;
+    border-color: rgba(105, 183, 255, 0.55) !important;
+    animation: none;
+}
+
+/* Estados padrao do Streamlit. */
+[data-testid="stAlert"] {
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-sm) !important;
+    background: var(--bg-secondary) !important;
+    color: var(--text-secondary) !important;
+}
+
+[data-testid="stSkeleton"] { opacity: 0.6; }
+
+@media (max-width: 768px) {
+    .block-container {
+        padding: 2.9rem 1rem 2rem !important;
+    }
+
+    .header-container.hero-profile {
+        min-height: 540px;
+        padding: 1.5rem;
+        align-items: flex-end;
+        text-align: left;
+        border-radius: 12px;
+    }
+
+    .hero-profile-bg {
+        background-position: 64% 16%;
+        object-position: 64% 16%;
+    }
+
+    .hero-profile-overlay {
+        background:
+            linear-gradient(0deg, rgba(5, 8, 12, 0.98) 0%, rgba(5, 8, 12, 0.82) 43%, rgba(5, 8, 12, 0.15) 76%),
+            linear-gradient(90deg, rgba(5, 8, 12, 0.35), transparent 75%);
+    }
+
+    .header-text.hero-profile-content {
+        width: 100%;
+        text-align: left;
+    }
+
+    .hero-profile .header-name {
+        max-width: 10ch;
+        font-size: clamp(2.65rem, 13vw, 4rem) !important;
+    }
+
+    .hero-profile .badge-disponivel {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .section-title { margin-top: 2.75rem !important; }
+    .metric-card { padding: 1rem 0.65rem; }
+}
+
+@media (max-width: 480px) {
+    .header-container.hero-profile { min-height: 500px; }
+    .hero-profile .header-name { font-size: clamp(2.45rem, 14vw, 3.5rem) !important; }
+    .hero-profile .header-role { font-size: 0.98rem; }
+    .section-title { font-size: 1.45rem !important; }
+}

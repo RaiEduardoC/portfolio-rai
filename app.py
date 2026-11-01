@@ -74,7 +74,6 @@ FOTO_B64 = get_photo_b64()
 
 # Ícones (Base64) — usados nos títulos, localização e cards de contato
 HOME_ICON = get_icon_b64("home.png")
-USER_ICON = get_icon_b64("user.png")
 SUITCASE_ICON = get_icon_b64("suitcase.png")
 GRADUATION_ICON = get_icon_b64("graduation.png")
 COMPETENCIA_ICON = get_icon_b64("flash (1).png")
@@ -112,10 +111,10 @@ PERFIL = {
     "nome": "Raí Eduardo Cardoso",
     "cargo": "Analista de Dados Sênior | Logística & BI",
     "resumo": (
-        "Analista de Dados com foco em Business Intelligence, automação "
-        "de processos e desenvolvimento de soluções orientadas a dados. "
-        "Atuo na construção de KPIs, OKRs, modelagem de dados, processos "
-        "ETL e dashboards estratégicos que apoiam a tomada de decisão."
+        "Analista de Dados com experiência em logística, Business Intelligence "
+        "e automação de processos. Transformo dados operacionais em KPIs, OKRs, "
+        "modelos de dados, pipelines ETL e dashboards para apoiar decisões, "
+        "controle de custos e eficiência operacional."
     ),
     "localizacao": "Maringá - PR, Brasil",
     "email": "raieduardocardoso@gmail.com",
@@ -131,12 +130,11 @@ EXPERIENCIAS = [
         "local": "Paiçandu - PR",
         "periodo": "Maio/2025 — Atual",
         "descricao": (
-            "Responsável pela análise de dados no setor de logística, com foco "
-            "na criação de KPIs e OKRs voltados à otimização de processos e "
-            "controle de custos. Desenvolvo análises estratégicas utilizando "
-            "Oracle (PL/SQL), Power BI, Excel, VBA e Python. Estruturo e "
-            "automatizo rotinas analíticas, criando painéis interativos e "
-            "relatórios gerenciais."
+            "Conduzo análises de dados logísticos e desenvolvo KPIs e OKRs para "
+            "otimização de processos e controle de custos. Estruturo consultas "
+            "em Oracle PL/SQL, automatizo rotinas com Python, VBA e Excel e "
+            "entrego dashboards em Power BI e relatórios gerenciais para suporte "
+            "à tomada de decisão."
         ),
         "tags": ["Oracle PL/SQL", "Power BI", "Python", "VBA", "KPIs", "OKRs"]
     },
@@ -146,11 +144,10 @@ EXPERIENCIAS = [
         "local": "Paiçandu - PR",
         "periodo": "Janeiro/2025 — Maio/2025",
         "descricao": (
-            "Atuação na gestão e otimização de processos logísticos, com foco "
-            "em eficiência operacional e suporte à tomada de decisão. "
-            "Responsável pela formação de pagamento a terceiros, controle de "
-            "coletas, embarques, monitoramento de entregas e validação de "
-            "custos de rotas."
+            "Apoiei a gestão e a otimização de processos logísticos, incluindo "
+            "formação de pagamentos a terceiros, controle de coletas e embarques, "
+            "monitoramento de entregas e validação de custos de rotas, com foco "
+            "em eficiência operacional e suporte à tomada de decisão."
         ),
         "tags": ["Logística", "Excel", "Power BI", "Custos", "Análise"]
     },
@@ -160,10 +157,10 @@ EXPERIENCIAS = [
         "local": "Maringá - PR",
         "periodo": "Março/2024 — Dezembro/2024",
         "descricao": (
-            "Atualização de custos de manutenção semanal de caminhões, criação "
-            "de planilhas em Excel e monitoramento de rotas e fluxo de "
-            "entregas. Apoio em rotinas administrativas como preparação de "
-            "contratos e controle de pagamentos."
+            "Atualizei semanalmente os custos de manutenção da frota e desenvolvi "
+            "planilhas em Excel para acompanhamento operacional. Monitorei rotas "
+            "e o fluxo de entregas e apoiei a preparação de contratos e o controle "
+            "de pagamentos."
         ),
         "tags": ["Excel", "Administrativo", "Logística", "Controle"]
     },
@@ -173,8 +170,9 @@ EXPERIENCIAS = [
         "local": "Maringá - PR",
         "periodo": "Fevereiro/2023 — Março/2024",
         "descricao": (
-            "Atuação no setor de transporte e suporte, elaborando planilhas "
-            "de entregas, médias de caminhões e controle de manutenção da frota."
+            "Apoiei as rotinas do setor de transporte por meio de planilhas de "
+            "entregas, médias operacionais de caminhões e controles de manutenção "
+            "da frota."
         ),
         "tags": ["Excel", "Suporte", "Planilhas"]
     }
@@ -413,27 +411,32 @@ def _goto(page: str) -> None:
     st.session_state.nav = page
 
 def render_header():
-    avatar = (
-        f'<img src="{FOTO_B64}" class="header-avatar photo" alt="Raí Eduardo Cardoso"/>'
+    hero_class = "hero-profile has-photo" if FOTO_B64 else "hero-profile no-photo"
+    hero_media = (
+        f'<img src="{FOTO_B64}" class="hero-profile-bg" '
+        'alt="Foto de Raí Eduardo Cardoso"/>'
         if FOTO_B64 else
-        '<div class="header-avatar">RC</div>'
+        '<div class="hero-profile-bg" role="img" '
+        'aria-label="Raí Eduardo Cardoso">'
+        '<span class="hero-profile-initials">RC</span></div>'
     )
-    st.markdown(f"""
-        <div class="header-container">
-            {avatar}
-            <div class="header-text">
-                <h1 class="header-name">{PERFIL['nome']}</h1>
-                <p class="header-role">{PERFIL['cargo']}</p>
-                <p class="header-location">
-                    <img src="{LOCATION_ICON}" class="icon" alt=""/>{PERFIL['localizacao']}
-                </p>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+    # String sem indentação inicial: Markdown interpreta quatro espaços como
+    # bloco de código e exibiria o HTML/Base64 como texto, mesmo com HTML liberado.
+    hero_html = (
+        f'<div class="header-container {hero_class}">{hero_media}'
+        '<div class="hero-profile-overlay" aria-hidden="true"></div>'
+        '<div class="header-text hero-profile-content">'
+        f'<h1 class="header-name">{PERFIL["nome"]}</h1>'
+        f'<p class="header-role">{PERFIL["cargo"]}</p>'
+        f'<p class="header-location"><img src="{LOCATION_ICON}" class="icon" '
+        f'alt=""/>{PERFIL["localizacao"]}</p>'
+        '</div></div>'
+    )
+    st.markdown(hero_html, unsafe_allow_html=True)
 
 def render_sobre():
     st.markdown(
-        f"<h2 class='section-title'><img src='{USER_ICON}' class='icon-title' alt=''/>Sobre Mim</h2>",
+        "<h2 class='section-title'>Sobre Mim</h2>",
         unsafe_allow_html=True)
     st.markdown(f"<div class='about-card'><p>{PERFIL['resumo']}</p></div>",
                 unsafe_allow_html=True)
