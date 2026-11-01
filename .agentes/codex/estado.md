@@ -4,31 +4,37 @@ Atualizado em: 2026-11-01 (America/Sao_Paulo)
 
 ## Objetivo atual
 
-Elevar o portfólio Streamlit para apresentação profissional, revisar perfil e experiências sem inventar fatos, criar hero editorial com a foto, remover o ícone de "Sobre Mim" e preservar o recolhimento/expansão da sidebar.
+Manter o portfólio como site estático compatível com a Vercel, preservar o design editorial e apresentar corretamente a progressão profissional e a foto canônica do perfil.
 
-## Entrega
+## Entrega atual
 
-- `app.py`: textos profissionais revisados; hero usa `assets/foto_perfil.jpeg` em `<img class="hero-profile-bg">`; "Sobre Mim" sem ícone; navegação preservada.
-- `style.css`: hero editorial responsivo, overlays, hierarquia e acabamento de cards; controle nativo da sidebar visível; fallback sem foto.
-- O HTML do hero deve permanecer sem indentação inicial para não virar bloco de código Markdown no Streamlit.
+- `index.html`: função atual `Logistics Specialist (Development)` desde SET/2026; trajetória Arilog segmentada em quatro etapas; hero atualizado; experiências anteriores preservadas.
+- `style.css`: linha vertical contínua de progressão, nós por cargo, destaque da função atual e enquadramento responsivo da nova foto.
+- `script.js`: sidebar recolhível com estado visual e atributos ARIA sincronizados no desktop, mobile, navegação e resize.
+- `assets/foto_perfil.jpeg`: asset canônico da foto de perfil e do hero; o arquivo fornecido pelo usuário deve ser preservado.
 
-## Verificações do patch atual
+## Verificações
 
-- `py -3.12 -m py_compile app.py`: passou em 2026-11-01.
-- `git diff --check`: passou em 2026-11-01.
-- Streamlit AppTest: zero exceções; CTAs/navegação verificados pelo revisor.
-- Teste visual desktop no Edge: hero/foto/overlay legíveis; sidebar recolheu e reabriu pelo controle nativo.
-- Mobile: breakpoints 768/480 revisados estruturalmente, sem emulação visual.
-- Revisão independente final: aprovada.
+- `node --check script.js`: passou.
+- `git diff --check`: passou, apenas com aviso de futura normalização LF/CRLF.
+- Render desktop no Edge: hero, nova foto e trajetória validados visualmente.
+- Render mobile em 390x844: sem overflow horizontal; sidebar inicia recolhida e anuncia `aria-expanded=false` / `Expandir menu`.
+- Revisão independente final: aprovada para commit/deploy.
 
 ## Execução do time
 
-- Head `/root`: modelo da sessão selecionado no app (a skill não o alterou); coordenação, integração, correções e testes; 2026-11-01; concluído.
-- Designer `/root/design_portfolio`: papel `codex-designer`, modelo fixado pelo agente nativo em gpt-5.6-sol; `style.css` e validação visual; 2026-11-01; concluído.
-- Software `/root/software_portfolio`: papel `codex-software`, modelo fixado pelo agente nativo em gpt-5.6-sol; `app.py`, correções do hero e testes; 2026-11-01; concluído.
-- Revisor `/root/revisao_portfolio`: papel `codex-revisor`, modelo fixado pelo agente nativo em gpt-5.6-sol; revisão independente e AppTest; 2026-11-01; aprovado.
+- Head `/root`: coordenação, integração, validação visual e memória; modelo da sessão selecionado no app; concluído.
+- Software `/root/software_promocao`: papel `codex-software`; `index.html` e `script.js`; concluído.
+- Designer `/root/design_trajetoria`: papel `codex-designer`; `style.css`; concluído.
+- Revisor `/root/revisao_final`: papel `codex-revisor`; revisão independente; aprovado.
+
+## Decisões duráveis
+
+- O portfólio não usa Streamlit; é HTML/CSS/JavaScript estático para Vercel.
+- A função atual desde SET/2026 é `Logistics Specialist (Development)`.
+- A trajetória usa `.timeline`, `.job`, `.job-current` e `.career-track` como contrato visual e semântico.
+- O estado acessível do menu deriva de `menu-open` no mobile e `collapsed` no desktop.
 
 ## Pendências
 
-- Validar visualmente em viewport mobile real quando conveniente.
-- Mudanças locais ainda não commitadas: `app.py` e `style.css`.
+- Nenhuma pendência funcional conhecida neste patch.
