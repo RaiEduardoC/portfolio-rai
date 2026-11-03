@@ -38,3 +38,13 @@ Manter o portfólio como site estático compatível com a Vercel, preservar o de
 ## Pendências
 
 - Nenhuma pendência funcional conhecida neste patch.
+
+## Checkpoint UI/UX dark — 2026-11-03
+
+- Objetivo: manter o tema dark e melhorar luminosidade, contraste, hierarquia e usabilidade em telas de 320 px ou mais.
+- `style.css`: paleta dark baseada em superfícies azul-grafite distintas, texto secundário mais legível, hero menos fechado, cards e estados interativos refinados, alvos de toque e responsividade revisados.
+- `script.js`: drawer móvel com `inert`, ciclo de foco, Escape, clique externo, retorno de foco, `aria-current` e suporte a movimento reduzido.
+- `index.html`: `theme-color` alinhado ao novo fundo `#10151d`; conteúdo profissional preservado.
+- Verificações atuais: `node --check script.js` passou; `git diff --check` passou com apenas avisos LF/CRLF; revisão independente final aprovada.
+- Risco residual: validação visual/interativa em navegador e leitor de tela reais não foi executada neste ambiente.
+- Execução: Head `/root` (modelo ativo da sessão), Designer `/root/design_dark_ux` (`codex-designer`, concluído), Revisor `/root/revisao_dark_ux` (`codex-revisor`, aprovado).
